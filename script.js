@@ -1,5 +1,4 @@
 function sendImage() {
-    // Get selected image
     const fileInput = document.getElementById("image");
     const file = fileInput.files[0];
 
@@ -8,7 +7,6 @@ function sendImage() {
         return;
     }
 
-    // Create form data INSIDE the function
     const formData = new FormData();
     formData.append("image", file);
 
@@ -16,13 +14,13 @@ function sendImage() {
         method: "POST",
         body: formData
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Server error");
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
             displayQuiz(data.questions);
         })
         .catch(error => {
@@ -31,19 +29,21 @@ function sendImage() {
         });
 }
 
+
 function displayQuiz(questions) {
     const quizDiv = document.getElementById("quiz");
     quizDiv.innerHTML = "";
 
     questions.forEach((q, index) => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-            <p><strong>Q${index + 1}:</strong> ${q.question}</p>
-            <ul>
-                ${q.options.map(opt => `<li>${opt}</li>`).join("")}
-            </ul>
+        const questionBlock = document.createElement("div");
+
+        questionBlock.innerHTML = `
+            <p><strong>Q${index + 1}. ${q.question}</strong></p>
+            ${q.options.map(opt => `<p>• ${opt}</p>`).join("")}
+            <p><em>Answer: ${q.answer}</em></p>
+            <hr>
         `;
-        quizDiv.appendChild(div);
+
+        quizDiv.appendChild(questionBlock);
     });
 }
-
