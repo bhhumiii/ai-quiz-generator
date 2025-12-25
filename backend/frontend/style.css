@@ -1,0 +1,60 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    padding: 20px;
+}
+
+/* Main heading */
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* Upload box */
+input[type="file"] {
+    display: block;
+    margin: 20px auto;
+}
+
+/* Buttons */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Quiz container */
+#quiz {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+/* Each question card */
+#quiz p {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Options spacing */
+#quiz input {
+    margin-right: 5px;
+}
+
+/* Score text */
+#score {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
