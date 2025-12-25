@@ -1,57 +1,49 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
+import base64
 
 from image_analyzer import analyze_image
 from quiz_generator import generate_quiz
 
 app = Flask(__name__)
 
-# ✅ Allow Netlify frontend to call Render backend
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "https://soft-babka-85acad.netlify.app"
-        ]
-    }
-})
+# ✅ VERY IMPORTANT (fixes Netlify → Render issue)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route("/", methods=["GET"])
 def home():
-    return "AI Quiz Generator backend is running!"
+    return "AI Quiz Generator API is running"
 
 
 @app.route("/generate-quiz", methods=["POST"])
 def generate_quiz_api():
     try:
-        # ✅ Check image
         if "image" not in request.files:
             return jsonify({"error": "No image uploaded"}), 400
 
-        image = request.files["image"]
+        image_file = request.files["image"]
+        image_bytes = image_file.read()
 
-        if image.filename == "":
-            return jsonify({"error": "Empty image"}), 400
+        if not image_bytes:
+            return jsonify({"error": "Empty image file"}), 400
 
-        # ✅ Step 1: OCR / Image understanding
-        extracted_text = analyze_image(image)
+        # Convert image to base64
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
-        if not extracted_text:
-            return jsonify({"error": "Could not read text from image"}), 400
+        # Step 1: analyze image
+        image_text = analyze_image(image_base64)
 
-        # ✅ Step 2: Generate quiz from text
-        questions = generate_quiz(extracted_text)
+        # Step 2: generate quiz
+        quiz = generate_quiz(image_text)
 
-        return jsonify({
-            "questions": questions
-        })
+        return jsonify({"quiz": quiz})
 
     except Exception as e:
         print("ERROR:", str(e))
-        return jsonify({"error": "Internal server error"}), 500
+        return jsonify({"error": str(e)}), 500
 
 
-# ✅ Required for Render
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
