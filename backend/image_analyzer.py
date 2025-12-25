@@ -1,7 +1,7 @@
 import os
 import google.generativeai as genai
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 
 def analyze_image(image_file):
@@ -10,8 +10,11 @@ def analyze_image(image_file):
     image_bytes = image_file.read()
 
     response = model.generate_content([
-        "Read the image and extract important text for quiz questions",
-        image_bytes
+        "Describe the educational content in this image clearly.",
+        {
+            "mime_type": image_file.mimetype,
+            "data": image_bytes
+        }
     ])
 
     return response.text
