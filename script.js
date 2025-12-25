@@ -3,9 +3,10 @@ function sendImage() {
     const formData = new FormData();
     formData.append("image", file);
 
-    fetch("https://ai-quiz-generator-586x.onrender.com/generate-quiz", {
+    const API_URL = "https://ai-quiz-generator-586x.onrender.com/generate-quiz";
+, {
         method: "POST",
-        body: formData
+            body: formData
     })
         .then(res => res.json())
         .then(data => {
