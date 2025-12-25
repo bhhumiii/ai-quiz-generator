@@ -5,13 +5,15 @@ function sendImage() {
     let formData = new FormData();
     formData.append("image", file);
 
-    fetch("http://127.0.0.1:5000/generate-quiz", {
-        method: "POST",
-        body: formData
-    })
+    fetch("https://ai-quiz-generator-586x.onrender.com/generate-quiz", {
+ {
+            method: "POST",
+            body: formData
+        })
         .then(res => res.json())
         .then(data => {
-            displayQuiz(data.questions);
+            displayQuiz(data.quiz);
+
         });
 }
 
