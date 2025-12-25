@@ -1,19 +1,20 @@
-function sendImage() {
-    const file = document.getElementById("image").files[0];
-    const formData = new FormData();
-    formData.append("image", file);
+fetch("https://ai-quiz-generator-586x.onrender.com/generate-quiz", {
+    method: "POST",
+    body: formData
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error("Server error");
+    }
+    return response.json();
+})
+.then(data => {
+    console.log(data);
+    // show quiz here
+})
+.catch(error => {
+    alert("Error generating quiz");
+    console.error(error);
+});
 
-    const API_URL = "https://ai-quiz-generator-586x.onrender.com/generate-quiz";
-, {
-        method: "POST",
-            body: formData
-    })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("quiz").innerText = data.quiz;
-        })
-        .catch(err => {
-            alert("Error generating quiz");
-            console.error(err);
-        });
-}
+
