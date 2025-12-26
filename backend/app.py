@@ -5,6 +5,7 @@ import json
 from image_analyzer import analyze_image
 from quiz_generator import generate_quiz
 
+
 app = Flask(__name__)
 CORS(app)
 
