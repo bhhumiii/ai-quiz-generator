@@ -1,36 +1,20 @@
 import os
 from google import genai
 
-# Initialize client
+
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 def generate_quiz(text):
+    model = client.models.get("gemini-1.0-pro")
+
     prompt = f"""
-Generate 3 multiple-choice questions from the following text.
-Return ONLY valid JSON (no markdown, no ```).
+    Create 3 multiple-choice questions from the following text.
+    Respond ONLY in valid JSON.
 
-Format:
-[
-  {{
-    "question": "...",
-    "options": {{
-      "A": "...",
-      "B": "...",
-      "C": "...",
-      "D": "..."
-    }},
-    "correct_answer": "A"
-  }}
-]
+    Text:
+    {text}
+    """
 
-Text:
-{text}
-"""
-
-    response = client.models.generate_content(
-        model="gemini-1.0-pro",
-        contents=prompt
-    )
-
+    response = model.generate_content(prompt)
     return response.text
