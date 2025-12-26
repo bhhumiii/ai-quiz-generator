@@ -5,13 +5,12 @@ genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 
 def analyze_image(image_file):
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-pro-vision")
 
-    # ✅ image_file MUST be a file object
     image_bytes = image_file.read()
 
     response = model.generate_content([
-        "Extract the educational text from this image.",
+        "Extract the educational content from this image clearly.",
         {
             "mime_type": image_file.mimetype,
             "data": image_bytes
