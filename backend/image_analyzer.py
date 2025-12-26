@@ -1,20 +1,19 @@
 import os
-import google.generativeai as genai
-
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+from google import genai
+from PIL import Image
 
 
 def analyze_image(image_file):
-    model = genai.GenerativeModel("gemini-pro-vision")
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-    image_bytes = image_file.read()
+    image = Image.open(image_file)
 
-    response = model.generate_content([
-        "Extract the educational content from this image clearly.",
-        {
-            "mime_type": image_file.mimetype,
-            "data": image_bytes
-        }
-    ])
+    response = client.models.generate_content(
+        model="gemini-1.5-pro",
+        contents=[
+            "Extract all readable text from this image.",
+            image
+        ]
+    )
 
     return response.text
