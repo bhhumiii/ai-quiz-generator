@@ -7,9 +7,11 @@ from quiz_generator import generate_quiz
 app = Flask(__name__)
 CORS(app)
 
+
 @app.route("/", methods=["GET"])
 def home():
     return "AI Quiz Generator API is running"
+
 
 @app.route("/generate-quiz", methods=["POST"])
 def generate_quiz_api():
