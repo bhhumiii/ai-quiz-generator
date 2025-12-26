@@ -1,29 +1,22 @@
 import os
-import google.generativeai as genai
+from google import genai
 
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 
 def generate_quiz(text):
-    model = genai.GenerativeModel("gemini-pro")
-
     prompt = f"""
-    Based on the following text, create 5 multiple-choice questions.
-    Each question should have 4 options and one correct answer.
+    Create 3 multiple-choice questions from the text below.
+    Each question must have 4 options and one correct answer.
+    Return JSON only.
 
     Text:
     {text}
-
-    Format the output as JSON with this structure:
-    [
-      {{
-        "question": "...",
-        "options": ["A", "B", "C", "D"],
-        "answer": "A"
-      }}
-    ]
     """
 
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
 
-    return eval(response.text)
+    return response.text

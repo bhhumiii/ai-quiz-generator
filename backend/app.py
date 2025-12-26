@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import json
 
 from image_analyzer import analyze_image
 from quiz_generator import generate_quiz
@@ -10,7 +11,7 @@ CORS(app)
 
 @app.route("/", methods=["GET"])
 def home():
-    return "AI Quiz Generator API is running"
+    return "AI Quiz Generator API running"
 
 
 @app.route("/generate-quiz", methods=["POST"])
@@ -21,12 +22,23 @@ def generate_quiz_api():
 
         image_file = request.files["image"]
 
-        # ✅ PASS FILE OBJECT (NOT STRING)
         extracted_text = analyze_image(image_file)
 
-        questions = generate_quiz(extracted_text)
+        raw_output = generate_quiz(extracted_text)
 
-        return jsonify({"questions": questions})
+        # 🔥 FORCE CLEAN
+        cleaned = raw_output.strip()
+
+        if cleaned.startswith("```"):
+            cleaned = cleaned.replace("```json", "")
+            cleaned = cleaned.replace("```", "")
+            cleaned = cleaned.strip()
+
+        questions = json.loads(cleaned)
+
+        return jsonify({
+            "questions": questions
+        })
 
     except Exception as e:
         print("ERROR:", e)
