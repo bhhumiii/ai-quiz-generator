@@ -1,18 +1,20 @@
 import os
 from google import genai
-from PIL import Image
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 def analyze_image(image_file):
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-
-    image = Image.open(image_file)
+    image_bytes = image_file.read()
 
     response = client.models.generate_content(
-        model="gemini-1.5-pro",
+        model="gemini-1.0-pro",
         contents=[
-            "Extract all readable text from this image.",
-            image
+            "Extract readable text from this image.",
+            {
+                "mime_type": "image/png",
+                "data": image_bytes
+            }
         ]
     )
 
