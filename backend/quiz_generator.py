@@ -28,7 +28,8 @@ def generate_quiz(text):
     """
 
     response = client.models.generate_content(
-        model="gemini-1.5-pro",
+        model=genai.GenerativeModel("gemini-1.0-pro")
+
         contents=prompt
     )
 
